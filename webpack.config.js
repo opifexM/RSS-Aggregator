@@ -2,6 +2,7 @@ import HtmlWebpackPlugin from 'html-webpack-plugin';
 
 export default {
   mode: process.env.NODE_ENV || 'development',
+  devtool: process.env.NODE_ENV === 'production' ? 'source-map' : 'eval-source-map',
   module: {
     rules: [
       {
@@ -21,7 +22,12 @@ export default {
       },
       {
         test: /\.woff2?(\?v=[0-9]\.[0-9]\.[0-9])?$/,
-        use: 'url-loader?limit=10000',
+        use: {
+          loader: 'url-loader',
+          options: {
+            limit: 10000,
+          },
+        },
       },
       {
         test: /\.(ttf|eot|svg)(\?[\s\S]+)?$/,
