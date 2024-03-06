@@ -10,8 +10,8 @@
 <main class="flex-grow-1">
   <section class="container-fluid bg-dark p-5">
     <div class="row">
-      <div class="col-md-10 col-lg-8 mx-auto text-white"><h1 class="display-3 mb-0">RSS Aggregator</h1>
-        <p class="lead">Enter the address to read RSS</p>
+      <div class="col-md-10 col-lg-8 mx-auto text-white"><h1 class="display-3 mb-0" id="main-title">RSS Aggregator</h1>
+        <p class="lead" id="main-subtitle">Enter the address to read RSS</p>
         <form action="" class="rss-form text-body">
           <div class="row">
             <div class="col">
@@ -20,7 +20,7 @@
                        class="form-control w-100"
                        id="url-input" name="url"
                        placeholder="RSS Link" required="">
-                <label for="url-input">RSS Link</label></div>
+                <label for="url-input" id="main-placeholder">RSS Link</label></div>
             </div>
             <div class="col-auto">
               <button aria-label="add" class="h-100 btn btn-lg btn-primary px-sm-5" disabled id="add-button"
@@ -30,7 +30,7 @@
             </div>
           </div>
         </form>
-        <p class="mt-2 mb-0 text-secondary">Example: https://lorem-rss.hexlet.app/feed</p>
+        <p class="mt-2 mb-0 text-secondary" id="main-example">Example: https://lorem-rss.hexlet.app/feed</p>
         <div id="url-status">
           <p class="feedback m-0 position-absolute small text-success" id="url-success">RSS успешно загружен</p>
           <p class="feedback m-0 position-absolute small text-danger" id="url-error">Ссылка должна быть валидным URL</p>

@@ -1,7 +1,8 @@
+import i18next from 'i18next';
 import {
   articleModal, articleModalBody,
   articleModalClose,
-  articleModalRead, articleModalTitle,
+  articleModalRead, articleModalTitle, mainExample, mainPlaceholder, mainSubtitle, mainTitle,
   urlAddButton,
   urlInputField,
   urlStatusDiv,
@@ -25,8 +26,13 @@ function openNewWindow(_, currentModalUrl) {
 function initialize(state) {
   let currentModalUrl = null;
 
-  articleModalRead.textContent = 'Читать полностью';
-  articleModalClose.textContent = 'Закрыть';
+  mainTitle.textContent = i18next.t('mainTitle');
+  mainSubtitle.textContent = i18next.t('mainSubtitle');
+  mainPlaceholder.textContent = i18next.t('mainPlaceholder');
+  mainExample.textContent = i18next.t('mainExample');
+  urlAddButton.textContent = i18next.t('urlAddButton');
+  articleModalRead.textContent = i18next.t('readMore');
+  articleModalClose.textContent = i18next.t('close');
 
   urlInputField.addEventListener('input', (event) => urlInputHandler(event, state));
   urlAddButton.addEventListener('click', () => urlAddButtonHandler(state));
@@ -47,7 +53,6 @@ function initialize(state) {
   });
 }
 
-
 /**
  * Renders the application state into the DOM.
  * @param {import('src/stateRepository.js').state} state - The current state of the application.
@@ -66,7 +71,7 @@ function render(state) {
 
   if (state.urlError) {
     const paragraph = document.createElement('p');
-    paragraph.textContent = 'The link must be a valid URL';
+    paragraph.textContent = i18next.t('validUrl');
     paragraph.classList.add('feedback', 'm-0', 'position-absolute', 'small', 'text-danger');
     urlStatusDiv.appendChild(paragraph);
     urlAddButton.disabled = true;
@@ -76,7 +81,7 @@ function render(state) {
 
   if (state.urlSuccess) {
     const paragraph = document.createElement('p');
-    paragraph.textContent = 'RSS successfully loaded';
+    paragraph.textContent = i18next.t('rssLoaded');
     paragraph.classList.add('feedback', 'm-0', 'position-absolute', 'small', 'text-success');
     urlStatusDiv.appendChild(paragraph);
   }
@@ -91,7 +96,7 @@ function render(state) {
   articleCard.classList.add('card-body');
   const articleCardH2 = document.createElement('h2');
   articleCardH2.classList.add('card-title', 'h4');
-  articleCardH2.textContent = 'Посты';
+  articleCardH2.textContent = i18next.t('posts');
   articleCard.appendChild(articleCardH2);
   articleDiv.appendChild(articleCard);
 
@@ -105,7 +110,7 @@ function render(state) {
   feedCard.classList.add('card-body');
   const feedCardH2 = document.createElement('h2');
   feedCardH2.classList.add('card-title', 'h4');
-  feedCardH2.textContent = 'Фиды';
+  feedCardH2.textContent = i18next.t('feeds');
   feedCard.appendChild(feedCardH2);
   feedDiv.appendChild(feedCard);
 
@@ -154,7 +159,7 @@ function render(state) {
       button.dataset.bsBody = article.summary;
       button.dataset.bsUrl = article.url;
       button.type = 'button';
-      button.textContent = 'Просмотр';
+      button.textContent = i18next.t('view');
       articleLi.appendChild(button);
 
       articleList.appendChild(articleLi);

@@ -1,6 +1,8 @@
+import initializeI18next from "./i18n.js";
 import { initialize } from './stateController.js';
 import { initState } from './stateRepository.js';
 
+initializeI18next();
 const state = initState();
 
 state.feeds = [
