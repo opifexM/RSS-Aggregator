@@ -1,6 +1,6 @@
 import axios from 'axios';
 import getSchema from './schema.js';
-import {urlInputField} from "./state-dom.js";
+import { urlInputField } from './state-dom.js';
 
 function verifyUrl(state, inputValue) {
   state.urlInput = inputValue;
@@ -108,8 +108,9 @@ function addFeed(state) {
     .then(() => {
       state.urlInput = '';
       urlInputField.value = '';
-      state.urlSuccess = true;
       urlInputField.focus();
+      state.urlSuccess = true;
+      console.log(1);
     });
 }
 
@@ -131,4 +132,6 @@ function scheduleFeedUpdates(state, interval) {
   }, interval);
 }
 
-export { verifyUrl, addFeed, setArticleRead, scheduleFeedUpdates };
+export {
+  verifyUrl, addFeed, setArticleRead, scheduleFeedUpdates,
+};

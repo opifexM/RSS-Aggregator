@@ -39,6 +39,7 @@ function showModal(event, state) {
 }
 
 function initialize(state) {
+  let currentModalUrl = null;
   mainTitle.textContent = i18next.t('mainTitle');
   mainSubtitle.textContent = i18next.t('mainSubtitle');
   mainPlaceholder.textContent = i18next.t('mainPlaceholder');
@@ -51,7 +52,6 @@ function initialize(state) {
   urlAddButton.addEventListener('click', (event) => urlAddButtonHandler(event, state));
   articleModalRead.addEventListener('click', (event) => openNewWindow(event, currentModalUrl));
 
-  let currentModalUrl = null;
   articleModal.addEventListener('show.bs.modal', (event) => {
     currentModalUrl = showModal(event, state);
   });
@@ -154,12 +154,12 @@ function renderFeedsAndArticles(state) {
  * @param {import('src/state-repository.js').state} state - The current state of the application.
  */
 function render(state) {
+  console.log(state);
   urlStatusDiv.innerHTML = '';
   urlAddButton.disabled = !state.urlInput.length;
   urlInputField.classList.remove('is-invalid');
 
   if (!state.urlInput.length) {
-    state.urlSuccess = false;
     state.urlError = false;
   }
 
