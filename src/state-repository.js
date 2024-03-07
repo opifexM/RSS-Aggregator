@@ -1,5 +1,5 @@
 import onChange from 'on-change';
-import { render } from './stateController.js';
+import { render } from './state-controller.js';
 
 export const initState = () => {
   /**
@@ -7,7 +7,7 @@ export const initState = () => {
    * @property {string} url - The URL of the article.
    * @property {string} title - The title of the article.
    * @property {string} summary - A summary of the article.
-   * @property {boolean} readStatus - Whether the article has been read.
+   * @property {boolean} isRead - Whether the article has been read.
    * @property {string} id - article id.
    */
 
@@ -24,12 +24,14 @@ export const initState = () => {
    * Represents the state of the application.
    * @type {Object}
    * @property {boolean} urlError - Indicates if there was an error with the URL.
+   * @property {boolean} rssError - Indicates if there was an error with the RSS.
    * @property {boolean} urlSuccess - Indicates if the URL was processed successfully.
    * @property {string} urlInput - The current URL input value.
    * @property {FeedType[]} feeds - An array of feeds.
    */
   const state = {
     urlError: false,
+    rssError: false,
     urlSuccess: false,
     urlInput: '',
     feeds: [],

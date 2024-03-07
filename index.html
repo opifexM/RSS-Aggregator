@@ -10,90 +10,66 @@
 <main class="flex-grow-1">
   <section class="container-fluid bg-dark p-5">
     <div class="row">
-      <div class="col-md-10 col-lg-8 mx-auto text-white"><h1 class="display-3 mb-0" id="main-title">RSS Aggregator</h1>
-        <p class="lead" id="main-subtitle">Enter the address to read RSS</p>
+      <div class="col-md-10 col-lg-8 mx-auto text-white"><h1 class="display-3 mb-0" id="main-title"></h1>
+        <p class="lead" id="main-subtitle"></p>
         <form action="" class="rss-form text-body">
           <div class="row">
             <div class="col">
               <div class="form-floating">
-                <input aria-label="url" autocomplete="off" autofocus=""
+                <input aria-label="url"
+                       autocomplete="off"
+                       autofocus=""
                        class="form-control w-100"
-                       id="url-input" name="url"
-                       placeholder="RSS Link" required="">
-                <label for="url-input" id="main-placeholder">RSS Link</label></div>
+                       id="url-input"
+                       name="url"
+                       placeholder="RSS Link"
+                       required="">
+                <label for="url-input" id="main-placeholder"></label></div>
             </div>
             <div class="col-auto">
-              <button aria-label="add" class="h-100 btn btn-lg btn-primary px-sm-5" disabled id="add-button"
+              <button aria-label="add"
+                      class="h-100 btn btn-lg btn-primary px-sm-5"
+                      disabled
+                      id="add-button"
                       type="submit">
-                Add
               </button>
             </div>
           </div>
         </form>
-        <p class="mt-2 mb-0 text-secondary" id="main-example">Example: https://lorem-rss.hexlet.app/feed</p>
-        <div id="url-status">
-          <p class="feedback m-0 position-absolute small text-success" id="url-success">RSS успешно загружен</p>
-          <p class="feedback m-0 position-absolute small text-danger" id="url-error">Ссылка должна быть валидным URL</p>
-        </div>
+        <p class="mt-2 mb-0 text-secondary" id="main-example"></p>
+        <div id="url-status"></div>
       </div>
     </div>
   </section>
   <section class="container-fluid container-xxl p-5">
     <div class="row">
       <div class="col-md-10 col-lg-8 order-1 mx-auto posts">
-        <div class="card border-0" id="article-div">
-          <div class="card-body"><h2 class="card-title h4">Посты</h2></div>
-          <ul class="list-group border-0 rounded-0">
-            <li class="list-group-item d-flex justify-content-between align-items-start border-0 border-end-0">
-              <a class="fw-bold" data-id="21" href="http://example.com/test/1709489880"
-                 rel="noopener noreferrer"
-                 target="_blank">Lorem ipsum 2024-03-03T18:18:00Z</a>
-              <button class="btn btn-outline-primary btn-sm" data-bs-target="#modal"
-                      data-bs-toggle="modal"
-                      data-id="21" type="button">Просмотр
-              </button>
-            </li>
-            <li class="list-group-item d-flex justify-content-between align-items-start border-0 border-end-0">
-              <a class="fw-bold" data-id="20" href="http://example.com/test/1709489820"
-                 rel="noopener noreferrer"
-                 target="_blank">Lorem ipsum 2024-03-03T18:17:00Z</a>
-              <button class="btn btn-outline-primary btn-sm" data-bs-target="#modal"
-                      data-bs-toggle="modal"
-                      data-id="20" type="button">Просмотр
-              </button>
-            </li>
-          </ul>
-        </div>
+        <div class="card border-0" id="article-div"></div>
       </div>
 
       <div class="col-md-10 col-lg-4 mx-auto order-0 order-lg-1 feeds">
-        <div class="card border-0" id="feed-div">
-          <div class="card-body"><h2 class="card-title h4">Фиды</h2></div>
-          <ul class="list-group border-0 rounded-0">
-            <li class="list-group-item border-0 border-end-0"><h3 class="h6 m-0">Lorem ipsum feed for an
-              interval of 1 minutes with 10 item(s)</h3>
-              <p class="m-0 small text-black-50">This is a constantly updating lorem ipsum feed</p></li>
-          </ul>
-        </div>
+        <div class="card border-0" id="feed-div"></div>
       </div>
     </div>
-    <div class="modal fade" id="articleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div aria-hidden="true" aria-labelledby="exampleModalLabel" class="modal fade" id="articleModal" tabindex="-1">
       <div class="modal-dialog">
         <div class="modal-content">
           <div class="modal-header">
             <h1 class="modal-title fs-5" id="exampleModalLabel">Modal title</h1>
-            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            <button aria-label="Close" class="btn-close" data-bs-dismiss="modal" type="button"></button>
           </div>
           <div class="modal-body"></div>
           <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" id="articleModalRead">Read</button>
-            <button type="button" class="btn btn-primary" id="articleModalClose" data-bs-dismiss="modal">Close</button>
+            <button class="btn btn-secondary" data-bs-dismiss="modal" id="articleModalRead" type="button">Read</button>
+            <button class="btn btn-primary" data-bs-dismiss="modal" id="articleModalClose" type="button">Close</button>
           </div>
         </div>
       </div>
     </div>
   </section>
 </main>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+<script crossorigin="anonymous"
+        integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
+        src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
