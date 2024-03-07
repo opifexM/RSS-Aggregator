@@ -110,7 +110,6 @@ function addFeed(state) {
       urlInputField.value = '';
       urlInputField.focus();
       state.urlSuccess = true;
-      console.log(1);
     });
 }
 

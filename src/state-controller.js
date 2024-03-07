@@ -154,7 +154,6 @@ function renderFeedsAndArticles(state) {
  * @param {import('src/state-repository.js').state} state - The current state of the application.
  */
 function render(state) {
-  console.log(state);
   urlStatusDiv.innerHTML = '';
   urlAddButton.disabled = !state.urlInput.length;
   urlInputField.classList.remove('is-invalid');
