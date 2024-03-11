@@ -3,7 +3,7 @@ import getSchema from './schema.js';
 
 const PROXY_URL = 'https://allorigins.hexlet.app/get';
 
-function verifyUrl(state, inputValue) {
+const verifyUrl = (state, inputValue) => {
   state.urlInput = inputValue;
   getSchema(state.feeds)
     .validate({ url: state.urlInput, uniqueField: state.urlInput })
@@ -18,9 +18,9 @@ function verifyUrl(state, inputValue) {
       console.error(error);
       return false;
     });
-}
+};
 
-function loadData(state, url) {
+const loadData = (state, url) => {
   const proxyUrl = new URL(PROXY_URL);
   proxyUrl.searchParams.set('disableCache', 'true');
   proxyUrl.searchParams.set('url', url);
@@ -32,9 +32,9 @@ function loadData(state, url) {
       console.error(error);
       return false;
     });
-}
+};
 
-function parseXml(state, data, feedUrl) {
+const parseXml = (state, data, feedUrl) => {
   try {
     const parser = new DOMParser();
     const xmlDoc = parser.parseFromString(data, 'text/xml');
@@ -77,13 +77,13 @@ function parseXml(state, data, feedUrl) {
     console.error(error);
     return null;
   }
-}
+};
 
 /**
  * @param {import('src/state-repository.js').state} state - The current state of the application.
  * @param {FeedType} newFeed - The new feed data.
  */
-function updateState(state, newFeed) {
+const updateState = (state, newFeed) => {
   if (!newFeed) {
     return;
   }
@@ -100,15 +100,13 @@ function updateState(state, newFeed) {
       existingFeed.articles.push(newArticle);
     }
   });
-}
+};
 
-function fetchXmlAndUpdateState(state, url) {
-  return loadData(state, url)
-    .then((data) => parseXml(state, data, url))
-    .then((data) => updateState(state, data));
-}
+const fetchXmlAndUpdateState = (state, url) => loadData(state, url)
+  .then((data) => parseXml(state, data, url))
+  .then((data) => updateState(state, data));
 
-function addFeed(state, urlInputField) {
+const addFeed = (state, urlInputField) => {
   if (state.urlValidateError) {
     return;
   }
@@ -126,9 +124,9 @@ function addFeed(state, urlInputField) {
       urlInputField.focus();
       state.urlSuccess = true;
     });
-}
+};
 
-function setArticleRead(state, articleId) {
+const setArticleRead = (state, articleId) => {
   state.feeds.forEach((feed) => {
     const foundArticle = feed.articles
       .find((article) => article.id.toString() === articleId.toString());
@@ -136,15 +134,15 @@ function setArticleRead(state, articleId) {
       foundArticle.isRead = true;
     }
   });
-}
+};
 
-function scheduleFeedUpdates(state, interval) {
+const scheduleFeedUpdates = (state, interval) => {
   setInterval(() => {
     state.feeds.forEach((feed) => {
       fetchXmlAndUpdateState(state, feed.url);
     });
   }, interval);
-}
+};
 
 export {
   verifyUrl, addFeed, setArticleRead, scheduleFeedUpdates,

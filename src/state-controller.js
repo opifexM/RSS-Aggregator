@@ -14,22 +14,22 @@ let articleModalBody;
 let urlInputField;
 let urlStatusDiv;
 
-function urlInputHandler(event, state) {
+const urlInputHandler = (event, state) => {
   verifyUrl(state, event.target.value);
-}
+};
 
-function urlAddButtonHandler(event, state) {
+const urlAddButtonHandler = (event, state) => {
   event.preventDefault();
   addFeed(state, urlInputField);
-}
+};
 
-function openNewWindow(_, currentModalUrl) {
+const openNewWindow = (_, currentModalUrl) => {
   if (currentModalUrl) {
     window.open(currentModalUrl, '_blank');
   }
-}
+};
 
-function showModal(event, state) {
+const showModal = (event, state) => {
   const button = event.relatedTarget;
   const modalTitle = button.getAttribute('data-bs-title');
   const modalBody = button.getAttribute('data-bs-body');
@@ -41,9 +41,9 @@ function showModal(event, state) {
 
   setArticleRead(state, articleId);
   return currentModalUrl;
-}
+};
 
-function createArticleListItem(article, state) {
+const createArticleListItem = (article, state) => {
   const articleLi = document.createElement('li');
   articleLi.classList.add('list-group-item', 'd-flex', 'justify-content-between', 'align-items-start', 'border-0', 'border-end-0');
 
@@ -69,9 +69,9 @@ function createArticleListItem(article, state) {
   button.textContent = i18nInstance.t('content.view');
   articleLi.appendChild(button);
   return articleLi;
-}
+};
 
-function createFeedListItem(feed) {
+const createFeedListItem = (feed) => {
   const li = document.createElement('li');
   li.classList.add('list-group-item', 'border-0', 'border-end-0');
 
@@ -85,9 +85,9 @@ function createFeedListItem(feed) {
   p.textContent = feed.description;
   li.appendChild(p);
   return li;
-}
+};
 
-function renderFeedsAndArticles(state) {
+const renderFeedsAndArticles = (state) => {
   const articleDiv = document.querySelector('#article-div');
   articleDiv.innerHTML = '';
   const articleCard = document.createElement('div');
@@ -129,21 +129,21 @@ function renderFeedsAndArticles(state) {
       articleList.appendChild(articleLi);
     });
   });
-}
+};
 
-function getErrorMessage(state) {
+const getErrorMessage = (state) => {
   if (state.urlValidateError) return i18nInstance.t('messages.urlValidateError');
   if (state.urlConnectionError) return i18nInstance.t('messages.urlConnectionError');
   if (state.rssParseError) return i18nInstance.t('messages.rssParseError');
   if (state.rssExistsError) return i18nInstance.t('messages.rssExistsError');
   return '';
-}
+};
 
 /**
  * Renders the application state into the DOM.
  * @param {import('src/state-repository.js').state} state - The current state of the application.
  */
-function render(state) {
+const render = (state) => {
   urlStatusDiv.innerHTML = '';
   urlInputField.classList.remove('is-invalid');
 
@@ -173,9 +173,9 @@ function render(state) {
   }
 
   renderFeedsAndArticles(state);
-}
+};
 
-function setupUI(state) {
+const setupUI = (state) => {
   let currentModalUrl = null;
 
   mainTitle.textContent = i18nInstance.t('ui.mainTitle');
@@ -197,9 +197,9 @@ function setupUI(state) {
   articleModal.addEventListener('hidden.bs.modal', () => {
     currentModalUrl = null;
   });
-}
+};
 
-function initialize(state) {
+const initialize = (state) => {
   document.addEventListener('DOMContentLoaded', () => {
     mainTitle = document.querySelector('#main-title');
     mainSubtitle = document.querySelector('#main-subtitle');
@@ -216,6 +216,6 @@ function initialize(state) {
 
     setupUI(state);
   });
-}
+};
 
 export { render, initialize };

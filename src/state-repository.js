@@ -1,7 +1,7 @@
 import onChange from 'on-change';
 import { render } from './state-controller.js';
 
-function initState() {
+const initState = () => {
   /**
    * @typedef {Object} ArticleType
    * @property {string} url - The URL of the article.
@@ -46,10 +46,8 @@ function initState() {
   });
 
   return watchedState;
-}
+};
 
-function isWatchedByOnChange(object) {
-  return !!object.$$typeofOnChange;
-}
+const isWatchedByOnChange = (object) => !!object.$$typeofOnChange;
 
 export { initState, isWatchedByOnChange };
