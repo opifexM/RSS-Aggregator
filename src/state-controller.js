@@ -1,13 +1,15 @@
-import i18next from 'i18next';
-import {
-  articleModal, articleModalBody,
-  articleModalClose,
-  articleModalRead, articleModalTitle, mainExample, mainPlaceholder, mainSubtitle, mainTitle,
-  urlAddButton,
-  urlInputField,
-  urlStatusDiv,
-} from './state-dom.js';
+import i18nInstance from './i18n.js';
 import { addFeed, setArticleRead, verifyUrl } from './state-service.js';
+
+let mainTitle;
+let mainSubtitle;
+let mainPlaceholder;
+let mainExample;
+let urlAddButton;
+let articleModalRead;
+let articleModalClose;
+let urlInputField;
+let urlStatusDiv;
 
 function urlInputHandler(event, state) {
   verifyUrl(state, event.target.value);
@@ -15,7 +17,7 @@ function urlInputHandler(event, state) {
 
 function urlAddButtonHandler(event, state) {
   event.preventDefault();
-  addFeed(state);
+  addFeed(state, urlInputField);
 }
 
 function openNewWindow(_, currentModalUrl) {
@@ -36,29 +38,6 @@ function showModal(event, state) {
 
   setArticleRead(state, articleId);
   return currentModalUrl;
-}
-
-function initialize(state) {
-  let currentModalUrl = null;
-  mainTitle.textContent = i18next.t('mainTitle');
-  mainSubtitle.textContent = i18next.t('mainSubtitle');
-  mainPlaceholder.textContent = i18next.t('mainPlaceholder');
-  mainExample.textContent = i18next.t('mainExample');
-  urlAddButton.textContent = i18next.t('urlAddButton');
-  articleModalRead.textContent = i18next.t('readMore');
-  articleModalClose.textContent = i18next.t('close');
-
-  urlInputField.addEventListener('input', (event) => urlInputHandler(event, state));
-  urlAddButton.addEventListener('click', (event) => urlAddButtonHandler(event, state));
-  articleModalRead.addEventListener('click', (event) => openNewWindow(event, currentModalUrl));
-
-  articleModal.addEventListener('show.bs.modal', (event) => {
-    currentModalUrl = showModal(event, state);
-  });
-
-  articleModal.addEventListener('hidden.bs.modal', () => {
-    currentModalUrl = null;
-  });
 }
 
 function createArticleListItem(article, state) {
@@ -84,7 +63,7 @@ function createArticleListItem(article, state) {
   button.dataset.bsBody = article.summary;
   button.dataset.bsUrl = article.url;
   button.type = 'button';
-  button.textContent = i18next.t('view');
+  button.textContent = i18nInstance.t('view');
   articleLi.appendChild(button);
   return articleLi;
 }
@@ -112,7 +91,7 @@ function renderFeedsAndArticles(state) {
   articleCard.classList.add('card-body');
   const articleCardH2 = document.createElement('h2');
   articleCardH2.classList.add('card-title', 'h4');
-  articleCardH2.textContent = i18next.t('posts');
+  articleCardH2.textContent = i18nInstance.t('posts');
   articleCard.appendChild(articleCardH2);
   articleDiv.appendChild(articleCard);
 
@@ -126,7 +105,7 @@ function renderFeedsAndArticles(state) {
   feedCard.classList.add('card-body');
   const feedCardH2 = document.createElement('h2');
   feedCardH2.classList.add('card-title', 'h4');
-  feedCardH2.textContent = i18next.t('feeds');
+  feedCardH2.textContent = i18nInstance.t('feeds');
   feedCard.appendChild(feedCardH2);
   feedDiv.appendChild(feedCard);
 
@@ -149,32 +128,39 @@ function renderFeedsAndArticles(state) {
   });
 }
 
+function getErrorMessage(state) {
+  if (state.urlValidateError) return i18nInstance.t('messages.urlValidateError');
+  if (state.urlConnectionError) return i18nInstance.t('messages.urlConnectionError');
+  if (state.rssParseError) return i18nInstance.t('messages.rssParseError');
+  if (state.rssExistsError) return i18nInstance.t('messages.rssExistsError');
+  return '';
+}
+
 /**
  * Renders the application state into the DOM.
  * @param {import('src/state-repository.js').state} state - The current state of the application.
  */
 function render(state) {
   urlStatusDiv.innerHTML = '';
-  urlAddButton.disabled = !state.urlInput.length;
   urlInputField.classList.remove('is-invalid');
 
   if (!state.urlInput.length) {
-    state.urlError = false;
+    state.urlValidateError = false;
   }
 
-  if (state.urlError || state.rssError) {
+  const errorMessage = getErrorMessage(state);
+  if (errorMessage) {
     const paragraph = document.createElement('p');
-    paragraph.textContent = i18next.t(state.urlError ? 'urlError' : 'rssError');
+    paragraph.textContent = errorMessage;
     paragraph.classList.add('feedback', 'm-0', 'position-absolute', 'small', 'text-danger');
     urlStatusDiv.appendChild(paragraph);
-    urlAddButton.disabled = true;
     state.urlSuccess = false;
     urlInputField.classList.add('is-invalid');
   }
 
   if (state.urlSuccess) {
     const paragraph = document.createElement('p');
-    paragraph.textContent = i18next.t('rssLoaded');
+    paragraph.textContent = i18nInstance.t('messages.rssLoaded');
     paragraph.classList.add('feedback', 'm-0', 'position-absolute', 'small', 'text-success');
     urlStatusDiv.appendChild(paragraph);
   }
@@ -184,6 +170,46 @@ function render(state) {
   }
 
   renderFeedsAndArticles(state);
+}
+
+function setupUI(state) {
+  let currentModalUrl = null;
+
+  mainTitle.textContent = i18nInstance.t('ui.mainTitle');
+  mainSubtitle.textContent = i18nInstance.t('ui.mainSubtitle');
+  mainPlaceholder.textContent = i18nInstance.t('ui.mainPlaceholder');
+  mainExample.textContent = i18nInstance.t('ui.mainExample');
+  urlAddButton.textContent = i18nInstance.t('ui.urlAddButton');
+  articleModalRead.textContent = i18nInstance.t('ui.readMore');
+  articleModalClose.textContent = i18nInstance.t('ui.close');
+
+  urlInputField.addEventListener('input', (event) => urlInputHandler(event, state));
+  urlAddButton.addEventListener('click', (event) => urlAddButtonHandler(event, state));
+  articleModalRead.addEventListener('click', (event) => openNewWindow(event, currentModalUrl));
+
+  articleModal.addEventListener('show.bs.modal', (event) => {
+    currentModalUrl = showModal(event, state);
+  });
+
+  articleModal.addEventListener('hidden.bs.modal', () => {
+    currentModalUrl = null;
+  });
+}
+
+function initialize(state) {
+  document.addEventListener('DOMContentLoaded', () => {
+    mainTitle = document.querySelector('#main-title');
+    mainSubtitle = document.querySelector('#main-subtitle');
+    mainPlaceholder = document.querySelector('#main-placeholder');
+    mainExample = document.querySelector('#main-example');
+    urlInputField = document.querySelector('#url-input');
+    urlAddButton = document.querySelector('#add-button');
+    urlStatusDiv = document.querySelector('#url-status');
+    articleModalRead = document.querySelector('#articleModalRead');
+    articleModalClose = document.querySelector('#articleModalClose');
+
+    setupUI(state);
+  });
 }
 
 export { render, initialize };
