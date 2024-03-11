@@ -1,3 +1,3 @@
-import { initializeApp } from './app.js';
+import initializeApp from './app.js';
 
 initializeApp();

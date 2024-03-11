@@ -4,9 +4,11 @@ import { scheduleFeedUpdates } from './state-service.js';
 
 const FEED_UPDATE_INTERVAL_MS = 5000;
 
-export function initializeApp() {
+function initializeApp() {
   const state = initState();
 
   initialize(state);
   scheduleFeedUpdates(state, FEED_UPDATE_INTERVAL_MS);
 }
+
+export default initializeApp;

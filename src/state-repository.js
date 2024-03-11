@@ -1,7 +1,7 @@
 import onChange from 'on-change';
 import { render } from './state-controller.js';
 
-export function initState() {
+function initState() {
   /**
    * @typedef {Object} ArticleType
    * @property {string} url - The URL of the article.
@@ -24,8 +24,8 @@ export function initState() {
    * Represents the state of the application.
    * @type {Object}
    * @property {boolean} urlValidateError - Indicates if there was a validation error with the URL.
-   * @property {boolean} urlConnectionError - Indicates if there was a connection error when trying to fetch the URL.
-   * @property {boolean} rssExistsError - Indicates if there was an error determining if the RSS feed exists.
+   * @property {boolean} urlConnectionError - Indicates if there was a connection error.
+   * @property {boolean} rssExistsError - Indicates if the RSS feed exists.
    * @property {boolean} rssParseError - Indicates if there was an error parsing the RSS feed.
    * @property {boolean} urlSuccess - Indicates if the URL was processed successfully.
    * @property {string} urlInput - The current URL input value.
@@ -47,3 +47,9 @@ export function initState() {
 
   return watchedState;
 }
+
+function isWatchedByOnChange(object) {
+  return !!object.$$typeofOnChange;
+}
+
+export { initState, isWatchedByOnChange };
