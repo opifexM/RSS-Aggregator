@@ -1,5 +1,5 @@
 import axios from 'axios';
-import getSchema from './schema.js';
+import getSchema from '../util/schema.js';
 
 const PROXY_URL = 'https://allorigins.hexlet.app/get';
 
@@ -80,8 +80,8 @@ const parseXml = (state, data, feedUrl) => {
 };
 
 /**
- * @param {import('src/state-repository.js').state} state - The current state of the application.
- * @param {FeedType} newFeed - The new feed data.
+ * @param {import('src/repository/rss-repository.js').state} state
+ * @param {FeedType} newFeed
  */
 const updateState = (state, newFeed) => {
   if (!newFeed) {

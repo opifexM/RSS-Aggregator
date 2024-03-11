@@ -1,6 +1,6 @@
-import { initialize } from './state-controller.js';
-import { initState } from './state-repository.js';
-import { scheduleFeedUpdates } from './state-service.js';
+import { initialize } from './controller/rss-controller.js';
+import { initState } from './repository/rss-repository.js';
+import { scheduleFeedUpdates } from './service/rss-service.js';
 
 const FEED_UPDATE_INTERVAL_MS = 5000;
 

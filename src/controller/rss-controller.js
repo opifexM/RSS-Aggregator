@@ -1,5 +1,5 @@
-import i18nInstance from './i18n.js';
-import { addFeed, setArticleRead, verifyUrl } from './state-service.js';
+import i18nInstance from '../config/i18n.js';
+import { addFeed, setArticleRead, verifyUrl } from '../service/rss-service.js';
 
 let mainTitle;
 let mainSubtitle;
@@ -140,8 +140,7 @@ const getErrorMessage = (state) => {
 };
 
 /**
- * Renders the application state into the DOM.
- * @param {import('src/state-repository.js').state} state - The current state of the application.
+ * @param {import('src/repository/rss-repository.js').state} state
  */
 const render = (state) => {
   urlStatusDiv.innerHTML = '';

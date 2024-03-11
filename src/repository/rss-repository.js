@@ -1,5 +1,5 @@
 import onChange from 'on-change';
-import { render } from './state-controller.js';
+import { render } from '../controller/rss-controller.js';
 
 const initState = () => {
   /**

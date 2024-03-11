@@ -1,6 +1,6 @@
 import i18next from 'i18next';
-import enTranslations from './locales/en.js';
-import ruTranslations from './locales/ru.js';
+import enTranslations from '../locales/en.js';
+import ruTranslations from '../locales/ru.js';
 
 const initializeI18next = () => {
   const i18nInstance = i18next.createInstance();
