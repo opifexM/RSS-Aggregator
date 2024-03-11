@@ -57,7 +57,7 @@ function parseXml(state, data, feedUrl) {
       const articleSummary = item.querySelector('description').textContent;
       const articleUrl = item.querySelector('link').textContent;
       if (!articleUrl) {
-        return;
+        return null;
       }
 
       feed.articles.push({
@@ -67,12 +67,15 @@ function parseXml(state, data, feedUrl) {
         isRead: false,
         id: crypto.randomUUID(),
       });
+
+      return null;
     });
 
     return feed;
   } catch (error) {
     state.rssParseError = true;
     console.error(error);
+    return null;
   }
 }
 
