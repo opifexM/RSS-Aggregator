@@ -6,8 +6,11 @@ let mainSubtitle;
 let mainPlaceholder;
 let mainExample;
 let urlAddButton;
+let articleModal;
 let articleModalRead;
 let articleModalClose;
+let articleModalTitle;
+let articleModalBody;
 let urlInputField;
 let urlStatusDiv;
 
@@ -205,8 +208,11 @@ function initialize(state) {
     urlInputField = document.querySelector('#url-input');
     urlAddButton = document.querySelector('#add-button');
     urlStatusDiv = document.querySelector('#url-status');
+    articleModal = document.querySelector('#articleModal');
     articleModalRead = document.querySelector('#articleModalRead');
     articleModalClose = document.querySelector('#articleModalClose');
+    articleModalTitle = document.querySelector('.modal-title');
+    articleModalBody = document.querySelector('.modal-body');
 
     setupUI(state);
   });
