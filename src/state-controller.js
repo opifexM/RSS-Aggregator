@@ -63,7 +63,7 @@ function createArticleListItem(article, state) {
   button.dataset.bsBody = article.summary;
   button.dataset.bsUrl = article.url;
   button.type = 'button';
-  button.textContent = i18nInstance.t('view');
+  button.textContent = i18nInstance.t('content.view');
   articleLi.appendChild(button);
   return articleLi;
 }
@@ -91,7 +91,7 @@ function renderFeedsAndArticles(state) {
   articleCard.classList.add('card-body');
   const articleCardH2 = document.createElement('h2');
   articleCardH2.classList.add('card-title', 'h4');
-  articleCardH2.textContent = i18nInstance.t('posts');
+  articleCardH2.textContent = i18nInstance.t('content.posts');
   articleCard.appendChild(articleCardH2);
   articleDiv.appendChild(articleCard);
 
@@ -105,7 +105,7 @@ function renderFeedsAndArticles(state) {
   feedCard.classList.add('card-body');
   const feedCardH2 = document.createElement('h2');
   feedCardH2.classList.add('card-title', 'h4');
-  feedCardH2.textContent = i18nInstance.t('feeds');
+  feedCardH2.textContent = i18nInstance.t('content.feeds');
   feedCard.appendChild(feedCardH2);
   feedDiv.appendChild(feedCard);
 
