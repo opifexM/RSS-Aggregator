@@ -5,23 +5,28 @@ import parseXml from './parser.js';
 const PROXY_URL = 'https://allorigins.hexlet.app/get';
 
 const verifyUrl = (state, inputValue) => {
-  state.ui.urlInput = inputValue;
-  getSchema(state.data.feeds)
-    .validate({ url: state.ui.urlInput, uniqueField: state.ui.urlInput })
+  const { watchedState } = state;
+  watchedState.ui.urlInput = inputValue;
+  getSchema(watchedState.data.feeds)
+    .validate({
+      url: watchedState.ui.urlInput,
+      uniqueField: watchedState.ui.urlInput,
+    })
     .then(() => {
-      state.ui.errors.isUrlValidationError = false;
-      state.ui.errors.isUrlConnectionError = false;
-      state.ui.errors.isRssParseError = false;
+      watchedState.ui.errors.isUrlValidationError = false;
+      watchedState.ui.errors.isUrlConnectionError = false;
+      watchedState.ui.errors.isRssParseError = false;
       return true;
     })
     .catch((error) => {
-      state.ui.errors.isUrlValidationError = true;
+      watchedState.ui.errors.isUrlValidationError = true;
       console.error(error);
       return false;
     });
 };
 
 const loadData = (state, url) => {
+  const { watchedState } = state;
   const proxyUrl = new URL(PROXY_URL);
   proxyUrl.searchParams.set('disableCache', 'true');
   proxyUrl.searchParams.set('url', url);
@@ -29,24 +34,25 @@ const loadData = (state, url) => {
   return axios.get(proxyUrl.href)
     .then((response) => response.data.contents)
     .catch((error) => {
-      state.ui.errors.isUrlConnectionError = true;
+      watchedState.ui.errors.isUrlConnectionError = true;
       console.error(error);
       return false;
     });
 };
 
 /**
- * @param {import('src/rss-repository.js').state} state
+ * @param {import('src/rss-repository.js').initState} state
  * @param {FeedType} newFeed
  */
 const updateState = (state, newFeed) => {
+  const { watchedState } = state;
   if (!newFeed) {
     return;
   }
 
-  const existingFeed = state.data.feeds.find((feed) => feed.url === newFeed.url);
+  const existingFeed = watchedState.data.feeds.find((feed) => feed.url === newFeed.url);
   if (!existingFeed) {
-    state.data.feeds.push(newFeed);
+    watchedState.data.feeds.push(newFeed);
     return;
   }
 
@@ -62,29 +68,33 @@ const fetchXmlAndUpdateState = (state, url) => loadData(state, url)
   .then((data) => parseXml(state, data, url))
   .then((data) => updateState(state, data));
 
-const addFeed = (state, urlInputField) => {
-  const existingFeed = state.data.feeds.find((feed) => feed.url === state.ui.urlInput);
+const addFeed = (state) => {
+  const { watchedState, domRefs } = state;
+  const existingFeed = watchedState.data.feeds
+    .find((feed) => feed.url === watchedState.ui.urlInput);
   if (existingFeed) {
-    state.ui.errors.isRssExistsError = true;
+    watchedState.ui.errors.isRssExistsError = true;
     return;
   }
 
-  fetchXmlAndUpdateState(state, state.ui.urlInput)
+  fetchXmlAndUpdateState(state, watchedState.ui.urlInput)
     .then(() => {
-      state.ui.urlInput = '';
-      urlInputField.value = '';
-      urlInputField.focus();
-      state.ui.urlSuccess = true;
+      watchedState.ui.urlInput = '';
+      domRefs.urlInputField.value = '';
+      domRefs.urlInputField.focus();
+      watchedState.ui.urlSuccess = true;
     });
 };
 
 const setArticleRead = (state, articleId) => {
-  state.ui.readArticlesSet.add(articleId);
+  const { watchedState } = state;
+  watchedState.ui.readArticlesSet.add(articleId);
 };
 
 const scheduleFeedUpdates = (state, interval) => {
+  const { watchedState } = state;
   setInterval(() => {
-    state.data.feeds.forEach((feed) => {
+    watchedState.data.feeds.forEach((feed) => {
       fetchXmlAndUpdateState(state, feed.url);
     });
   }, interval);

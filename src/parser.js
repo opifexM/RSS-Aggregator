@@ -1,4 +1,4 @@
-const parseXml = (state, data, feedUrl) => {
+const parseXml = (state, data, url) => {
   try {
     const parser = new DOMParser();
     const xmlDoc = parser.parseFromString(data, 'text/xml');
@@ -10,7 +10,7 @@ const parseXml = (state, data, feedUrl) => {
     const feed = {
       name: feedName,
       description: feedDescription,
-      url: feedUrl,
+      url,
       id: crypto.randomUUID(),
       articles: [],
     };
@@ -21,6 +21,7 @@ const parseXml = (state, data, feedUrl) => {
       const articleSummary = item.querySelector('description').textContent;
       const articleUrl = item.querySelector('link').textContent;
       if (!articleUrl) {
+        console.log('parse: 1-0');
         return null;
       }
 
@@ -36,7 +37,7 @@ const parseXml = (state, data, feedUrl) => {
 
     return feed;
   } catch (error) {
-    state.ui.errors.isRssParseError = true;
+    state.watchedState.ui.errors.isRssParseError = true;
     console.error(error);
     return null;
   }

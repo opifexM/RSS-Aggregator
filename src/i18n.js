@@ -17,5 +17,4 @@ const initializeI18next = () => {
   return i18nInstance;
 };
 
-const i18nInstance = initializeI18next();
-export default i18nInstance;
+export default initializeI18next;

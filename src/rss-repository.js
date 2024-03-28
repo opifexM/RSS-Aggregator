@@ -1,6 +1,11 @@
 import onChange from 'on-change';
-import {render} from './rss-controller.js';
+import initializeI18next from './i18n.js';
+import { render } from './rss-controller.js';
 
+/**
+ * Initializes the application state and returns
+ * @returns {{ watchedState: StateType, domRefs: DomRefsType, i18n: Object }}
+ */
 const initState = () => {
   /**
    * @typedef {Object} ArticleType
@@ -58,27 +63,46 @@ const initState = () => {
       readArticlesSet: new Set(),
       initialize: false,
     },
-    domRefs: {
-      mainTitle: null,
-      mainSubtitle: null,
-      mainPlaceholder: null,
-      mainExample: null,
-      urlAddButton: null,
-      articleModal: null,
-      articleModalRead: null,
-      articleModalClose: null,
-      articleModalTitle: null,
-      articleModalBody: null,
-      urlInputField: null,
-      urlStatusDiv: null,
-    },
   };
 
+  /**
+   * Contains references to the DOM elements used in the application.
+   * @typedef {Object} DomRefsType
+   * @property {HTMLElement|null} mainTitle - The main title element.
+   * @property {HTMLElement|null} mainSubtitle - The subtitle element.
+   * @property {HTMLElement|null} mainPlaceholder - Placeholder element for main content.
+   * @property {HTMLElement|null} mainExample - Example text element.
+   * @property {HTMLElement|null} urlAddButton - Button for adding a new URL.
+   * @property {HTMLElement|null} articleModal - Modal element for displaying articles.
+   * @property {HTMLElement|null} articleModalRead - Button inside the modal to mark as read.
+   * @property {HTMLElement|null} articleModalClose - Button to close the article modal.
+   * @property {HTMLElement|null} articleModalTitle - Element where the title modal.
+   * @property {HTMLElement|null} articleModalBody - Element for the body content in the modal.
+   * @property {HTMLElement|null} urlInputField - Input field for entering the URL.
+   * @property {HTMLElement|null} urlStatusDiv - Element to display the status of the URL.
+   */
+  const domRefs = {
+    mainTitle: null,
+    mainSubtitle: null,
+    mainPlaceholder: null,
+    mainExample: null,
+    urlAddButton: null,
+    articleModal: null,
+    articleModalRead: null,
+    articleModalClose: null,
+    articleModalTitle: null,
+    articleModalBody: null,
+    urlInputField: null,
+    urlStatusDiv: null,
+  };
+
+  const i18n = initializeI18next();
+
   const watchedState = onChange(state, () => {
-    render(watchedState);
+    render({ watchedState, domRefs, i18n });
   });
 
-  return watchedState;
+  return { watchedState, domRefs, i18n };
 };
 
 const isWatchedByOnChange = (object) => !!object.$$typeofOnChange;
