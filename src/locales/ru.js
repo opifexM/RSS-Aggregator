@@ -12,12 +12,13 @@ const ruTranslations = {
       urlAddButton: 'Добавить',
       readMore: 'Читать полностью',
       close: 'Закрыть',
+      loading: 'Загрузка...',
     },
     messages: {
-      urlValidateError: 'Ссылка должна быть валидным URL',
-      urlConnectionError: 'Ошибка сети',
-      rssParseError: 'Ресурс не содержит валидный RSS',
-      rssExistsError: 'RSS уже существует',
+      isUrlValidationError: 'Ссылка должна быть валидным URL',
+      isUrlConnectionError: 'Ошибка сети',
+      isRssParseError: 'Ресурс не содержит валидный RSS',
+      isRssExistsError: 'RSS уже существует',
       rssLoaded: 'RSS успешно загружен',
     },
     content: {

@@ -1,14 +1,14 @@
-import { initialize } from './controller/rss-controller.js';
-import { initState } from './repository/rss-repository.js';
-import { scheduleFeedUpdates } from './service/rss-service.js';
+import { initialize } from './rss-controller.js';
+import { initState } from './rss-repository.js';
+import { scheduleFeedUpdates } from './rss-service.js';
 
 const FEED_UPDATE_INTERVAL_MS = 5000;
 
-const initializeApp = () => {
+const app = () => {
   const state = initState();
 
   initialize(state);
   scheduleFeedUpdates(state, FEED_UPDATE_INTERVAL_MS);
 };
 
-export default initializeApp;
+export default app;

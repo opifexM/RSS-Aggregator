@@ -12,12 +12,13 @@ const enTranslations = {
       urlAddButton: 'Add',
       readMore: 'Read more',
       close: 'Close',
+      loading: 'Loading...',
     },
     messages: {
-      urlValidateError: 'The link must be a valid URL',
-      urlConnectionError: 'Network error',
-      rssParseError: 'The resource does not contain valid RSS',
-      rssExistsError: 'RSS exists',
+      isUrlValidationError: 'The link must be a valid URL',
+      isUrlConnectionError: 'Network error',
+      isRssParseError: 'The resource does not contain valid RSS',
+      isRssExistsError: 'RSS exists',
       rssLoaded: 'RSS successfully loaded',
     },
     content: {
