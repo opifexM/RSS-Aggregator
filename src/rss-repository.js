@@ -13,6 +13,7 @@ const initState = () => {
    * @property {string} title - The title of the article.
    * @property {string} summary - A summary of the article.
    * @property {string} id - Article id.
+   * @property {string} feedId - Feed id.
    */
 
   /**
@@ -21,7 +22,6 @@ const initState = () => {
    * @property {string} name - The name of the feed.
    * @property {string} description - A description of the feed.
    * @property {string} id - Feed id.
-   * @property {ArticleType[]} articles - An array of articles.
    */
 
   /**
@@ -35,7 +35,8 @@ const initState = () => {
   /**
    * @typedef {Object} UIType
    * @property {ErrorsType} errors - Object containing error states.
-   * @property {boolean} isUrlSuccess - Indicates if the URL was processed successfully.
+   * @property {boolean} isUrlProcessed - Indicates if the URL was processed successfully.
+   * @property {boolean} isDomReady - Indicates if the DOM was loaded.
    * @property {string} urlInput - The current URL input value.
    * @property {Set<string>} readArticlesSet - A set of IDs for read articles.
    */
@@ -45,11 +46,13 @@ const initState = () => {
    * @typedef {Object} StateType
    * @property {Object} data - Data related to the application.
    * @property {FeedType[]} data.feeds - An array of feeds.
+   * @property {ArticleType[]} data.articles - An array of articles.
    * @property {UIType} ui - UI state of the application.
    */
   const state = {
     data: {
       feeds: [],
+      articles: [],
     },
     ui: {
       errors: {
@@ -58,10 +61,10 @@ const initState = () => {
         isRssExistsError: false,
         isRssParseError: false,
       },
-      urlSuccess: false,
+      isDomReady: false,
+      isUrlProcessed: false,
       urlInput: '',
       readArticlesSet: new Set(),
-      initialize: false,
     },
   };
 

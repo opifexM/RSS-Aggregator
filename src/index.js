@@ -1,3 +1,14 @@
-import app from './app.js';
+import { initializeDOM } from './rss-controller.js';
+import { initState } from './rss-repository.js';
+import { scheduleFeedUpdates } from './rss-service.js';
 
-app();
+const FEED_UPDATE_INTERVAL_MS = 5000;
+
+const index = () => {
+  const state = initState();
+
+  initializeDOM(state);
+  scheduleFeedUpdates(state, FEED_UPDATE_INTERVAL_MS);
+};
+
+index();

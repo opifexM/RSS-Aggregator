@@ -1,4 +1,4 @@
-import { addFeed, setArticleRead, verifyUrl } from './rss-service.js';
+import {addFeed, setArticleRead, verifyUrl} from './rss-service.js';
 
 const urlInputHandler = (event, state) => {
   verifyUrl(state, event.target.value);
@@ -15,8 +15,11 @@ function showLoading(state) {
 
 const urlAddButtonHandler = (event, state) => {
   const { watchedState } = state;
-  event.preventDefault();
+  if (!watchedState.ui.urlInput.length) {
+    return;
+  }
 
+  event.preventDefault();
   if (watchedState.ui.errors.isUrlValidationError) {
     return;
   }
@@ -124,11 +127,12 @@ const renderFeedsAndArticles = (state) => {
     const li = createFeedListItem(feed);
     feedList.appendChild(li);
 
-    if (!feed.articles.length) {
+    const articles = watchedState.data.articles.filter((article) => article.feedId = feed.id);
+    if (!articles.length) {
       return;
     }
 
-    feed.articles.forEach((article) => {
+    articles.forEach((article) => {
       const articleLi = createArticleListItem(article, state);
       articleList.appendChild(articleLi);
     });
@@ -149,7 +153,7 @@ const getErrorMessage = (state) => {
  */
 const render = (state) => {
   const { watchedState, domRefs, i18n } = state;
-  if (!state.watchedState.ui.initialize) {
+  if (!state.watchedState.ui.isDomReady) {
     return;
   }
 
@@ -166,11 +170,11 @@ const render = (state) => {
     paragraph.textContent = errorMessage;
     paragraph.classList.add('feedback', 'm-0', 'position-absolute', 'small', 'text-danger');
     domRefs.urlStatusDiv.appendChild(paragraph);
-    watchedState.ui.urlSuccess = false;
+    watchedState.ui.isUrlProcessed = false;
     domRefs.urlInputField.classList.add('is-invalid');
   }
 
-  if (watchedState.ui.urlSuccess) {
+  if (watchedState.ui.isUrlProcessed) {
     const paragraph = document.createElement('p');
     paragraph.textContent = i18n.t('messages.rssLoaded');
     paragraph.classList.add('feedback', 'm-0', 'position-absolute', 'small', 'text-success');
@@ -226,7 +230,7 @@ const initializeDOM = (state) => {
     domRefs.articleModalBody = document.querySelector('.modal-body');
 
     setupUI(state);
-    watchedState.ui.initialize = true;
+    watchedState.ui.isDomReady = true;
   });
 };
 

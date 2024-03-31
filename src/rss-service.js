@@ -1,6 +1,6 @@
 import axios from 'axios';
-import getSchema from './schema.js';
 import parseXml from './parser.js';
+import getSchema from './schema.js';
 
 const PROXY_URL = 'https://allorigins.hexlet.app/get';
 
@@ -18,54 +18,72 @@ const verifyUrl = (state, inputValue) => {
       watchedState.ui.errors.isRssParseError = false;
       return true;
     })
-    .catch((error) => {
+    .catch(() => {
       watchedState.ui.errors.isUrlValidationError = true;
-      console.error(error);
       return false;
     });
 };
 
-const loadData = (state, url) => {
-  const { watchedState } = state;
+function getProxyUrl(url) {
   const proxyUrl = new URL(PROXY_URL);
   proxyUrl.searchParams.set('disableCache', 'true');
   proxyUrl.searchParams.set('url', url);
+  return proxyUrl;
+}
+
+const loadData = (state, url) => {
+  const proxyUrl = getProxyUrl(url);
 
   return axios.get(proxyUrl.href)
     .then((response) => response.data.contents)
     .catch((error) => {
-      watchedState.ui.errors.isUrlConnectionError = true;
-      console.error(error);
-      return false;
+      throw new Error(error);
     });
 };
 
 /**
  * @param {import('src/rss-repository.js').initState} state
- * @param {FeedType} newFeed
+ * @param {{feed: FeedType, articles: ArticleType[]}} data
  */
-const updateState = (state, newFeed) => {
-  const { watchedState } = state;
-  if (!newFeed) {
+const updateState = (state, data) => {
+  if (!data) {
     return;
   }
+
+  const { watchedState } = state;
+  const { feed: newFeed, articles: newArticles } = data;
 
   const existingFeed = watchedState.data.feeds.find((feed) => feed.url === newFeed.url);
   if (!existingFeed) {
     watchedState.data.feeds.push(newFeed);
+    watchedState.data.articles = [...watchedState.data.articles, ...newArticles];
     return;
   }
 
-  newFeed.articles.forEach((newArticle) => {
-    const foundArticle = existingFeed.articles.find((article) => article.url === newArticle.url);
+  const existingArticles = watchedState.data.articles
+    .filter((article) => article.feedId === existingFeed.id);
+  if (!existingArticles.length) {
+    watchedState.data.articles = [...watchedState.data.articles, ...newArticles];
+    return;
+  }
+
+  newArticles.forEach((newArticle) => {
+    const foundArticle = existingArticles.find((article) => article.url === newArticle.url);
     if (!foundArticle) {
-      existingFeed.articles.push(newArticle);
+      watchedState.data.articles.push(newArticle);
     }
   });
 };
 
 const fetchXmlAndUpdateState = (state, url) => loadData(state, url)
+  .catch((error) => {
+    state.watchedState.ui.errors.isUrlConnectionError = true;
+    console.error('Ошибка при загрузке данных', error);
+  })
   .then((data) => parseXml(state, data, url))
+  .catch(() => {
+    state.watchedState.ui.errors.isRssParseError = true;
+  })
   .then((data) => updateState(state, data));
 
 const addFeed = (state) => {
@@ -82,7 +100,7 @@ const addFeed = (state) => {
       watchedState.ui.urlInput = '';
       domRefs.urlInputField.value = '';
       domRefs.urlInputField.focus();
-      watchedState.ui.urlSuccess = true;
+      watchedState.ui.isUrlProcessed = true;
     });
 };
 

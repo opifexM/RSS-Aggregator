@@ -1,3 +1,4 @@
+/** @returns {{feed: FeedType, articles: ArticleType[]}} */
 const parseXml = (state, data, url) => {
   try {
     const parser = new DOMParser();
@@ -12,34 +13,30 @@ const parseXml = (state, data, url) => {
       description: feedDescription,
       url,
       id: crypto.randomUUID(),
-      articles: [],
     };
 
-    const articles = channel.querySelectorAll('item');
-    articles.forEach((item) => {
+    const items = channel.querySelectorAll('item');
+    /** @type {ArticleType[]} */
+    const articles = Array.from(items).map((item) => {
       const articleTitle = item.querySelector('title').textContent;
       const articleSummary = item.querySelector('description').textContent;
       const articleUrl = item.querySelector('link').textContent;
       if (!articleUrl) {
-        console.log('parse: 1-0');
         return null;
       }
 
-      feed.articles.push({
+      return {
         title: articleTitle,
         summary: articleSummary,
         url: articleUrl,
         id: crypto.randomUUID(),
-      });
-
-      return null;
+        feedId: feed.id,
+      };
     });
 
-    return feed;
+    return { feed, articles };
   } catch (error) {
-    state.watchedState.ui.errors.isRssParseError = true;
-    console.error(error);
-    return null;
+    throw new Error(error);
   }
 };
 
