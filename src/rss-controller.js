@@ -1,4 +1,4 @@
-import {addFeed, setArticleRead, verifyUrl} from './rss-service.js';
+import { addFeed, setArticleRead, verifyUrl } from './rss-service.js';
 
 const urlInputHandler = (event, state) => {
   verifyUrl(state, event.target.value);
