@@ -127,7 +127,7 @@ const renderFeedsAndArticles = (state) => {
     const li = createFeedListItem(feed);
     feedList.appendChild(li);
 
-    const articles = watchedState.data.articles.filter((article) => article.feedId = feed.id);
+    const articles = watchedState.data.articles.filter((article) => article.feedId === feed.id);
     if (!articles.length) {
       return;
     }
