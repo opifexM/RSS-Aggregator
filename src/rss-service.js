@@ -1,5 +1,6 @@
 import axios from 'axios';
 import parseXml from './parser.js';
+import { Status } from './rss-repository.js';
 import getSchema from './schema.js';
 
 const PROXY_URL = 'https://allorigins.hexlet.app/get';
@@ -7,19 +8,22 @@ const PROXY_URL = 'https://allorigins.hexlet.app/get';
 const verifyUrl = (state, inputValue) => {
   const { watchedState } = state;
   watchedState.ui.urlInput = inputValue;
+  if (!inputValue.length) {
+    watchedState.ui.status = Status.READY;
+    return;
+  }
+
   getSchema(watchedState.data.feeds)
     .validate({
       url: watchedState.ui.urlInput,
       uniqueField: watchedState.ui.urlInput,
     })
     .then(() => {
-      watchedState.ui.errors.isUrlValidationError = false;
-      watchedState.ui.errors.isUrlConnectionError = false;
-      watchedState.ui.errors.isRssParseError = false;
+      watchedState.ui.status = Status.READY;
       return true;
     })
     .catch(() => {
-      watchedState.ui.errors.isUrlValidationError = true;
+      watchedState.ui.status = Status.VALIDATION_ERROR;
       return false;
     });
 };
@@ -36,8 +40,8 @@ const loadData = (state, url) => {
 
   return axios.get(proxyUrl.href)
     .then((response) => response.data.contents)
-    .catch((error) => {
-      throw new Error(error);
+    .catch(() => {
+      throw new Error(Status.CONNECTION_ERROR);
     });
 };
 
@@ -76,31 +80,40 @@ const updateState = (state, data) => {
 };
 
 const fetchXmlAndUpdateState = (state, url) => loadData(state, url)
-  .catch((error) => {
-    state.watchedState.ui.errors.isUrlConnectionError = true;
-    console.error('Ошибка при загрузке данных', error);
-  })
   .then((data) => parseXml(state, data, url))
-  .catch(() => {
-    state.watchedState.ui.errors.isRssParseError = true;
-  })
-  .then((data) => updateState(state, data));
+  .then((data) => updateState(state, data))
+  .catch((error) => {
+    if (error.message === Status.CONNECTION_ERROR) {
+      console.error('Status.CONNECTION_ERROR');
+      state.watchedState.ui.status = Status.CONNECTION_ERROR;
+    } else if (error.message === Status.RSS_PARSE_ERROR) {
+      console.error('Status.RSS_PARSE_ERROR');
+      state.watchedState.ui.status = Status.RSS_PARSE_ERROR;
+    } else {
+      console.error(error);
+    }
+  });
 
 const addFeed = (state) => {
   const { watchedState, domRefs } = state;
+  watchedState.ui.status = Status.PROCESS;
+
   const existingFeed = watchedState.data.feeds
     .find((feed) => feed.url === watchedState.ui.urlInput);
   if (existingFeed) {
-    watchedState.ui.errors.isRssExistsError = true;
+    watchedState.ui.status = Status.RSS_EXISTS_ERROR;
     return;
   }
 
   fetchXmlAndUpdateState(state, watchedState.ui.urlInput)
     .then(() => {
-      watchedState.ui.urlInput = '';
-      domRefs.urlInputField.value = '';
       domRefs.urlInputField.focus();
-      watchedState.ui.isUrlProcessed = true;
+
+      if (watchedState.ui.status === Status.PROCESS) {
+        watchedState.ui.urlInput = '';
+        domRefs.urlInputField.value = '';
+        watchedState.ui.status = Status.FINISHED;
+      }
     });
 };
 

@@ -2,6 +2,16 @@ import onChange from 'on-change';
 import initializeI18next from './i18n.js';
 import { render } from './rss-controller.js';
 
+const Status = {
+  READY: 'Ready',
+  PROCESS: 'Process',
+  VALIDATION_ERROR: 'URL validation error',
+  CONNECTION_ERROR: 'URL connection error',
+  RSS_EXISTS_ERROR: 'RSS already exists',
+  RSS_PARSE_ERROR: 'RSS parsing error',
+  FINISHED: 'URL processed',
+};
+
 /**
  * Initializes the application state and returns
  * @returns {{ watchedState: StateType, domRefs: DomRefsType, i18n: Object }}
@@ -34,9 +44,7 @@ const initState = () => {
 
   /**
    * @typedef {Object} UIType
-   * @property {ErrorsType} errors - Object containing error states.
-   * @property {boolean} isUrlProcessed - Indicates if the URL was processed successfully.
-   * @property {boolean} isDomReady - Indicates if the DOM was loaded.
+   * @property {Status} status - Specifies the status of the URL.
    * @property {string} urlInput - The current URL input value.
    * @property {Set<string>} readArticlesSet - A set of IDs for read articles.
    */
@@ -55,14 +63,7 @@ const initState = () => {
       articles: [],
     },
     ui: {
-      errors: {
-        isUrlValidationError: false,
-        isUrlConnectionError: false,
-        isRssExistsError: false,
-        isRssParseError: false,
-      },
-      isDomReady: false,
-      isUrlProcessed: false,
+      status: Status.READY,
       urlInput: '',
       readArticlesSet: new Set(),
     },
@@ -108,6 +109,4 @@ const initState = () => {
   return { watchedState, domRefs, i18n };
 };
 
-const isWatchedByOnChange = (object) => !!object.$$typeofOnChange;
-
-export { initState, isWatchedByOnChange };
+export { initState, Status };

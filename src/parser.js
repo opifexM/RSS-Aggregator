@@ -1,3 +1,5 @@
+import { Status } from './rss-repository.js';
+
 /** @returns {{feed: FeedType, articles: ArticleType[]}} */
 const parseXml = (state, data, url) => {
   try {
@@ -36,7 +38,7 @@ const parseXml = (state, data, url) => {
 
     return { feed, articles };
   } catch (error) {
-    throw new Error(error);
+    throw new Error(Status.RSS_PARSE_ERROR);
   }
 };
 

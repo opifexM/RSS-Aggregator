@@ -1,29 +1,23 @@
+import { Status } from './rss-repository.js';
 import { addFeed, setArticleRead, verifyUrl } from './rss-service.js';
 
 const urlInputHandler = (event, state) => {
   verifyUrl(state, event.target.value);
 };
 
-function showLoading(state) {
-  const { i18n } = state;
-  const articleDiv = document.querySelector('#article-div');
-  articleDiv.innerHTML = '';
-  const p = document.createElement('p');
-  p.textContent = i18n.t('ui.loading');
-  articleDiv.appendChild(p);
-}
-
 const urlAddButtonHandler = (event, state) => {
   const { watchedState } = state;
+
   if (!watchedState.ui.urlInput.length) {
     return;
   }
-
   event.preventDefault();
-  if (watchedState.ui.errors.isUrlValidationError) {
+
+  if (watchedState.ui.status === Status.VALIDATION_ERROR
+    || watchedState.ui.status === Status.PROCESS) {
     return;
   }
-  showLoading(state);
+
   addFeed(state);
 };
 
@@ -141,10 +135,10 @@ const renderFeedsAndArticles = (state) => {
 
 const getErrorMessage = (state) => {
   const { watchedState, i18n } = state;
-  if (watchedState.ui.errors.isUrlValidationError) return i18n.t('messages.isUrlValidationError');
-  if (watchedState.ui.errors.isUrlConnectionError) return i18n.t('messages.isUrlConnectionError');
-  if (watchedState.ui.errors.isRssParseError) return i18n.t('messages.isRssParseError');
-  if (watchedState.ui.errors.isRssExistsError) return i18n.t('messages.isRssExistsError');
+  if (watchedState.ui.status === Status.VALIDATION_ERROR) return i18n.t('messages.isUrlValidationError');
+  if (watchedState.ui.status === Status.CONNECTION_ERROR) return i18n.t('messages.isUrlConnectionError');
+  if (watchedState.ui.status === Status.RSS_PARSE_ERROR) return i18n.t('messages.isRssParseError');
+  if (watchedState.ui.status === Status.RSS_EXISTS_ERROR) return i18n.t('messages.isRssExistsError');
   return '';
 };
 
@@ -153,31 +147,31 @@ const getErrorMessage = (state) => {
  */
 const render = (state) => {
   const { watchedState, domRefs, i18n } = state;
-  if (!state.watchedState.ui.isDomReady) {
-    return;
-  }
 
   domRefs.urlStatusDiv.innerHTML = '';
   domRefs.urlInputField.classList.remove('is-invalid');
 
-  if (!watchedState.ui.urlInput.length) {
-    watchedState.ui.errors.isUrlValidationError = false;
-  }
-
   const errorMessage = getErrorMessage(state);
-  if (errorMessage) {
+  if (
+    watchedState.ui.status === Status.VALIDATION_ERROR
+    || watchedState.ui.status === Status.CONNECTION_ERROR
+    || watchedState.ui.status === Status.RSS_EXISTS_ERROR
+    || watchedState.ui.status === Status.RSS_PARSE_ERROR
+  ) {
     const paragraph = document.createElement('p');
     paragraph.textContent = errorMessage;
     paragraph.classList.add('feedback', 'm-0', 'position-absolute', 'small', 'text-danger');
     domRefs.urlStatusDiv.appendChild(paragraph);
-    watchedState.ui.isUrlProcessed = false;
     domRefs.urlInputField.classList.add('is-invalid');
-  }
-
-  if (watchedState.ui.isUrlProcessed) {
+  } else if (watchedState.ui.status === Status.FINISHED) {
     const paragraph = document.createElement('p');
     paragraph.textContent = i18n.t('messages.rssLoaded');
     paragraph.classList.add('feedback', 'm-0', 'position-absolute', 'small', 'text-success');
+    domRefs.urlStatusDiv.appendChild(paragraph);
+  } else if (watchedState.ui.status === Status.PROCESS) {
+    const paragraph = document.createElement('p');
+    paragraph.textContent = i18n.t('ui.loading');
+    paragraph.classList.add('feedback', 'm-0', 'position-absolute', 'small', 'text-warning');
     domRefs.urlStatusDiv.appendChild(paragraph);
   }
 
@@ -214,7 +208,7 @@ const setupUI = (state) => {
 };
 
 const initializeDOM = (state) => {
-  const { watchedState, domRefs } = state;
+  const { domRefs } = state;
   document.addEventListener('DOMContentLoaded', () => {
     domRefs.mainTitle = document.querySelector('#main-title');
     domRefs.mainSubtitle = document.querySelector('#main-subtitle');
@@ -230,7 +224,6 @@ const initializeDOM = (state) => {
     domRefs.articleModalBody = document.querySelector('.modal-body');
 
     setupUI(state);
-    watchedState.ui.isDomReady = true;
   });
 };
 
