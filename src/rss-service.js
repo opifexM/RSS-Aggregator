@@ -1,7 +1,7 @@
 import axios from 'axios';
 import parseXml from './parser.js';
-import { Status } from './rss-repository.js';
 import getSchema from './schema.js';
+import Status from './statusCodes.js';
 
 const PROXY_URL = 'https://allorigins.hexlet.app/get';
 

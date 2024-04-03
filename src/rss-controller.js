@@ -1,5 +1,5 @@
-import { Status } from './rss-repository.js';
 import { addFeed, setArticleRead, verifyUrl } from './rss-service.js';
+import Status from './statusCodes.js';
 
 const urlInputHandler = (event, state) => {
   verifyUrl(state, event.target.value);

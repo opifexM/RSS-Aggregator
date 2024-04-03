@@ -1,4 +1,4 @@
-import { Status } from './rss-repository.js';
+import Status from './statusCodes.js';
 
 /** @returns {{feed: FeedType, articles: ArticleType[]}} */
 const parseXml = (state, data, url) => {
