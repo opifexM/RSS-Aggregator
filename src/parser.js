@@ -37,7 +37,7 @@ const parseXml = (state, data, url) => {
     });
 
     return { feed, articles };
-  } catch (error) {
+  } catch (errorNode) {
     throw new Error(Status.RSS_PARSE_ERROR);
   }
 };

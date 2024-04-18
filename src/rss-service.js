@@ -13,7 +13,7 @@ const verifyUrl = (state, inputValue) => {
     return;
   }
 
-  getSchema(watchedState.data.feeds)
+  getSchema(state)
     .validate({
       url: watchedState.ui.urlInput,
       uniqueField: watchedState.ui.urlInput,

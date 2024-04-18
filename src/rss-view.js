@@ -87,35 +87,19 @@ const createFeedListItem = (feed) => {
   return li;
 };
 
-const renderFeedsAndArticles = (state) => {
-  const { watchedState, i18n } = state;
-  const articleDiv = document.querySelector('#article-div');
-  articleDiv.innerHTML = '';
-  const articleCard = document.createElement('div');
-  articleCard.classList.add('card-body');
-  const articleCardH2 = document.createElement('h2');
-  articleCardH2.classList.add('card-title', 'h4');
-  articleCardH2.textContent = i18n.t('content.posts');
-  articleCard.appendChild(articleCardH2);
-  articleDiv.appendChild(articleCard);
-
-  const articleList = document.createElement('ul');
-  articleList.classList.add('list-group', 'border-0', 'rounded-0');
-  articleDiv.appendChild(articleList);
-
-  const feedDiv = document.querySelector('#feed-div');
-  feedDiv.innerHTML = '';
+function renderFeedsAndArticles(i18n, watchedState, state, articleList) {
+  const feedsFragment = new DocumentFragment();
   const feedCard = document.createElement('div');
   feedCard.classList.add('card-body');
   const feedCardH2 = document.createElement('h2');
   feedCardH2.classList.add('card-title', 'h4');
   feedCardH2.textContent = i18n.t('content.feeds');
   feedCard.appendChild(feedCardH2);
-  feedDiv.appendChild(feedCard);
+  feedsFragment.appendChild(feedCard);
 
   const feedList = document.createElement('ul');
   feedList.classList.add('list-group', 'border-0', 'rounded-0');
-  feedDiv.appendChild(feedList);
+  feedsFragment.appendChild(feedList);
 
   watchedState.data.feeds.forEach((feed) => {
     const li = createFeedListItem(feed);
@@ -131,6 +115,33 @@ const renderFeedsAndArticles = (state) => {
       articleList.appendChild(articleLi);
     });
   });
+
+  const feedDiv = document.querySelector('#feed-div');
+  feedDiv.innerHTML = '';
+  feedDiv.appendChild(feedsFragment);
+}
+
+const renderUI = (state) => {
+  const { watchedState, i18n } = state;
+
+  const articleFragment = new DocumentFragment();
+  const articleCard = document.createElement('div');
+  articleCard.classList.add('card-body');
+  const articleCardH2 = document.createElement('h2');
+  articleCardH2.classList.add('card-title', 'h4');
+  articleCardH2.textContent = i18n.t('content.posts');
+  articleCard.appendChild(articleCardH2);
+  articleFragment.appendChild(articleCard);
+
+  const articleList = document.createElement('ul');
+  articleList.classList.add('list-group', 'border-0', 'rounded-0');
+  articleFragment.appendChild(articleList);
+
+  const articleDiv = document.querySelector('#article-div');
+  articleDiv.innerHTML = '';
+  articleDiv.appendChild(articleFragment);
+
+  renderFeedsAndArticles(i18n, watchedState, state, articleList);
 };
 
 const getErrorMessage = (state) => {
@@ -179,7 +190,7 @@ const render = (state) => {
     return;
   }
 
-  renderFeedsAndArticles(state);
+  renderUI(state);
 };
 
 const setupUI = (state) => {

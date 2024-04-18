@@ -2,7 +2,7 @@ const enTranslations = {
   translation: {
     languages: {
       en: 'English',
-      ru: 'Русский',
+      ru: 'Russian',
     },
     ui: {
       mainTitle: 'RSS Aggregator',
@@ -20,6 +20,9 @@ const enTranslations = {
       isRssParseError: 'The resource does not contain valid RSS',
       isRssExistsError: 'RSS exists',
       rssLoaded: 'RSS successfully loaded',
+      schemaUrlRequired: 'Url is required',
+      schemaUrlExists: 'Url exists in list',
+      schemaUrlUnique: 'Unique field is required',
     },
     content: {
       posts: 'Posts',

@@ -1,4 +1,4 @@
-import { initializeDOM } from './rss-controller.js';
+import { initializeDOM } from './rss-view.js';
 import { initState } from './rss-repository.js';
 import { scheduleFeedUpdates } from './rss-service.js';
 

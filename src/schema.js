@@ -1,10 +1,14 @@
 import * as Yup from 'yup';
 
-const getSchema = (feedUrlList) => Yup.object().shape({
-  url: Yup.string().url().required('Url is required'),
-  uniqueField: Yup.string()
-    .notOneOf(feedUrlList, 'Url exists in list')
-    .required('Unique field is required'),
-});
+const getSchema = (state) => {
+  const { watchedState, i18n } = state;
+
+  return Yup.object().shape({
+    url: Yup.string().url().required(i18n.t('messages.schemaUrlRequired')),
+    uniqueField: Yup.string()
+      .notOneOf(watchedState.data.feeds, i18n.t('messages.schemaUrlExists'))
+      .required(i18n.t('messages.schemaUrlUnique')),
+  });
+};
 
 export default getSchema;

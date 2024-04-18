@@ -1,7 +1,7 @@
 const ruTranslations = {
   translation: {
     languages: {
-      en: 'English',
+      en: 'Английский',
       ru: 'Русский',
     },
     ui: {
@@ -20,6 +20,9 @@ const ruTranslations = {
       isRssParseError: 'Ресурс не содержит валидный RSS',
       isRssExistsError: 'RSS уже существует',
       rssLoaded: 'RSS успешно загружен',
+      schemaUrlRequired: 'Необходимо указать Url',
+      schemaUrlExists: 'Url уже добавлен',
+      schemaUrlUnique: 'Необходимо указать уникальное значение',
     },
     content: {
       posts: 'Посты',

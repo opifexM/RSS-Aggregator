@@ -1,6 +1,6 @@
 import onChange from 'on-change';
 import initializeI18next from './i18n.js';
-import { render } from './rss-controller.js';
+import { render } from './rss-view.js';
 import Status from './statusCodes.js';
 
 /**
