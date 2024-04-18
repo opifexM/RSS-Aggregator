@@ -146,51 +146,69 @@ const renderUI = (state) => {
 
 const getErrorMessage = (state) => {
   const { watchedState, i18n } = state;
-  if (watchedState.ui.status === Status.VALIDATION_ERROR) return i18n.t('messages.isUrlValidationError');
-  if (watchedState.ui.status === Status.CONNECTION_ERROR) return i18n.t('messages.isUrlConnectionError');
-  if (watchedState.ui.status === Status.RSS_PARSE_ERROR) return i18n.t('messages.isRssParseError');
-  if (watchedState.ui.status === Status.RSS_EXISTS_ERROR) return i18n.t('messages.isRssExistsError');
-  return '';
+  switch (watchedState.ui.status) {
+    case Status.VALIDATION_ERROR:
+      return i18n.t('messages.isUrlValidationError');
+    case Status.CONNECTION_ERROR:
+      return i18n.t('messages.isUrlConnectionError');
+    case Status.RSS_PARSE_ERROR:
+      return i18n.t('messages.isRssParseError');
+    case Status.RSS_EXISTS_ERROR:
+      return i18n.t('messages.isRssExistsError');
+    default:
+      return '';
+  }
+};
+
+const updateStatusMessage = (state) => {
+  const { watchedState, domRefs, i18n } = state;
+  domRefs.urlStatusDiv.innerHTML = '';
+  domRefs.urlInputField.classList.remove('is-invalid');
+
+  let message = '';
+  let cssClass = '';
+
+  switch (watchedState.ui.status) {
+    case Status.VALIDATION_ERROR:
+    case Status.CONNECTION_ERROR:
+    case Status.RSS_EXISTS_ERROR:
+    case Status.RSS_PARSE_ERROR:
+      message = getErrorMessage(state);
+      cssClass = 'text-danger';
+      domRefs.urlInputField.classList.add('is-invalid');
+      break;
+    case Status.FINISHED:
+      message = i18n.t('messages.rssLoaded');
+      cssClass = 'text-success';
+      break;
+    case Status.PROCESS:
+      message = i18n.t('ui.loading');
+      cssClass = 'text-warning';
+      break;
+    default:
+      break;
+  }
+
+  if (message) {
+    const paragraph = document.createElement('p');
+    paragraph.textContent = message;
+    paragraph.classList.add('feedback', 'm-0', 'position-absolute', 'small', cssClass);
+    domRefs.urlStatusDiv.appendChild(paragraph);
+  }
+};
+
+const renderFeeds = (state) => {
+  if (state.watchedState.data.feeds.length > 0) {
+    renderUI(state);
+  }
 };
 
 /**
  * @param {import('src/rss-repository.js').initState} state
  */
 const render = (state) => {
-  const { watchedState, domRefs, i18n } = state;
-
-  domRefs.urlStatusDiv.innerHTML = '';
-  domRefs.urlInputField.classList.remove('is-invalid');
-
-  const errorMessage = getErrorMessage(state);
-  if (
-    watchedState.ui.status === Status.VALIDATION_ERROR
-    || watchedState.ui.status === Status.CONNECTION_ERROR
-    || watchedState.ui.status === Status.RSS_EXISTS_ERROR
-    || watchedState.ui.status === Status.RSS_PARSE_ERROR
-  ) {
-    const paragraph = document.createElement('p');
-    paragraph.textContent = errorMessage;
-    paragraph.classList.add('feedback', 'm-0', 'position-absolute', 'small', 'text-danger');
-    domRefs.urlStatusDiv.appendChild(paragraph);
-    domRefs.urlInputField.classList.add('is-invalid');
-  } else if (watchedState.ui.status === Status.FINISHED) {
-    const paragraph = document.createElement('p');
-    paragraph.textContent = i18n.t('messages.rssLoaded');
-    paragraph.classList.add('feedback', 'm-0', 'position-absolute', 'small', 'text-success');
-    domRefs.urlStatusDiv.appendChild(paragraph);
-  } else if (watchedState.ui.status === Status.PROCESS) {
-    const paragraph = document.createElement('p');
-    paragraph.textContent = i18n.t('ui.loading');
-    paragraph.classList.add('feedback', 'm-0', 'position-absolute', 'small', 'text-warning');
-    domRefs.urlStatusDiv.appendChild(paragraph);
-  }
-
-  if (!watchedState.data.feeds.length) {
-    return;
-  }
-
-  renderUI(state);
+  updateStatusMessage(state);
+  renderFeeds(state);
 };
 
 const setupUI = (state) => {
